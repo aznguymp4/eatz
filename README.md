@@ -1,4 +1,4 @@
-# EATZ (e-amusement to zenius)
+# [EATZ](https://aznguy.com/eatz/) (e-amusement to zenius)
 Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshots to [ZiV DDR Score Tracker](https://zenius-i-vanisher.com/v5.2/ddrscoretracker.php?function=enterscore).
 
 ### Latest Version Supported: DDR A20 PLUS
