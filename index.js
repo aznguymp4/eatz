@@ -7,7 +7,7 @@ const autoPaste = document.getElementById('autoPaste')
 const gameID = document.getElementById('gameID')
 const codeblock = document.getElementById('codeBlock')
 const cover = new Image()
-cover.src = '../src/cover.png'
+cover.src = './src/cover.png'
 
 let charts = {};
 ['sbeg','sbas','sdif','sexp','scha','dbas','ddif','dexp','dcha'].map(d => {
