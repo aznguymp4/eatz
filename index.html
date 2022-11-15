@@ -1,3 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/index.css"/>
+	<link rel="icon" type="image/x-icon" href="/src/favicon.ico">
+	<script defer src="npm/npm.js"></script>
+	<script defer src="index.js"></script>
+	<title>EATZ</title>
+</head>
 <body>
-    under construction :D
+	<center>
+		<h1 style="height: 15px;">e-amusement to Zenius</h1>
+		<h4 style="color: #888;">created by <a target="_blank" href="https://aznguy.com/">aznguy.mp4</a></h4>
+	</center>
+	<div id="groups">
+		<div id="left">
+			<h3>Image URLs and/or Tweet URLs (<a target="_blank" href="https://pbs.twimg.com/media/FgYRFeaWQAE49kk?format=jpg">example</a>) </h3><br>
+			<div id="URLs">
+				<div class="TextInputGroup">
+					<input class="urlInput" type="text" onClick="this.select();" required>
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>URL</label><div class="progress"></div>
+				</div>
+			</div>
+			<button id="urlAdd">New URL</button>
+			<input type="checkbox" name="autoPaste" id="autoPaste">Auto paste on new</input>
+			<br><br>
+			<button id="start">Generate</button><br><br>
+			Game Version
+			<select id="gameID" name="Select Game">
+				<option value="5518">DDR A3 (A3 songs aren't added yet; old songs work)</option>
+				<option value="5156" selected>DDR A20 PLUS (default)</option>
+				<option value="3802">DDR A20</option>
+				<option value="2979">DDR A</option>
+				<option value="347" >DDR X3</option>
+			</select>
+		</div>
+		<div id="right">
+			<h3 align="right">Console Command (paste in <a target="_blank" href="https://zenius-i-vanisher.com/">zenius</a>)</h3><br>
+			<div id="codeBlock" onclick="selectText('codeBlock')">
+				console.log("example");<br>
+				// example<br>
+			</div>
+		</div>
+	</div>
 </body>
+</html>

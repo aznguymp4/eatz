@@ -1,0 +1,1 @@
+global.window.tesseract = require('tesseract.js')

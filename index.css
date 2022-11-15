@@ -1,0 +1,235 @@
+:root {
+	--buttonPrimary: #13aa52;
+	--buttonSecondary: #2ecc71;
+	--textInputAccent: #4e9eff;
+/* 	--textInputGrad: linear-gradient(90deg, rgba(78,158,255,0) 0%, rgba(78,158,255,1) 20%, rgba(78,158,255,1) 80%, rgba(78,158,255,0) 100%);*/
+	--textColor: #ddd;
+	--cornerRadius: 8px;
+	--defaultFont: GilroyBold, Arial, Helvetica, sans-serif;
+	--lightFont: Gilroy, Arial, Helvetica, sans-serif;
+	--diffBeg: #78acff;
+	--diffBas: rgb(255, 229, 98);
+	--diffDif: #ED4245;
+	--diffExp: #2ECC71;
+	--diffCha: #E66AFF;
+	--diffNaN: #FFF;
+}
+
+@font-face {
+	font-family: Gilroy;
+	src: url("./fonts/Gilroy-Light.ttf");
+}
+
+@font-face {
+	font-family: GilroyBold;
+	src: url("./fonts/Gilroy-Bold.ttf");
+}
+
+a{
+	color: var(--buttonSecondary);
+	text-decoration: none;
+	transition: ease-out color 150ms;
+}
+a:hover{
+	color: var(--buttonPrimary);
+}
+
+#left,#right{
+	display: block;
+/* 	border: green solid;
+ */	width: 50%;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#groups {
+	display: flex;
+}
+
+body {
+	background-color: #1f1f1f;
+	color: var(--textColor);
+	font-family: var(--defaultFont);
+	overflow-x: hidden;
+}
+
+#codeBlock{
+	font-family: Menlo;
+	font-size: 14px;
+	background-color: #333;
+	color: #888;
+	border-radius: var(--cornerRadius);
+	padding: 10px;
+}
+
+.beg{ color: var(--diffBeg); }
+.bas{ color: var(--diffBas); }
+.dif{ color: var(--diffDif); }
+.exp{ color: var(--diffExp); }
+.cha{ color: var(--diffCha); }
+.NaN{ color: var(--diffNaN); }
+.NaN a{ color: var(--diffBeg) !important; }
+
+button {
+	background-color: var(--buttonPrimary);
+	border: 1px solid var(--buttonSecondary);
+	border-radius: var(--cornerRadius);
+	box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+	box-sizing: border-box;
+	color: #fff;
+	cursor: pointer;
+	font-family: var(--defaultFont);
+	font-size: 18px;
+	font-weight: 400;
+	min-width: 115px;
+	outline: none;
+	outline: 0;
+	padding: 10px 15px;
+	text-align: center;
+	transform: translateY(0);
+	transition: transform ease-out 150ms, box-shadow 150ms, opacity 150ms;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+}
+
+button:hover {
+	box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+	opacity: 80%;
+	transform: translateY(-1px);
+}
+
+button:active {
+	transform: translateY(2px);
+}
+
+/* form starting stylings ------------------------------- */
+.TextInputGroup {
+	position: relative;
+	margin-bottom: 25px;
+}
+
+input[type=text] {
+	font-size: 18px;
+	padding: 10px 10px 10px 10px;
+	display: block;
+	font-family: var(--lightFont);
+	background-color: #333;
+	color: var(--textColor);
+	border-radius: var(--cornerRadius);
+	width: calc(100% - 20px);
+	border: none;
+}
+
+input[type=text]:focus {
+	outline: none;
+}
+
+/* LABEL ======================================= */
+label {
+	color: #999;
+	font-size: 18px;
+	font-weight: normal;
+	position: absolute;
+	pointer-events: none;
+	left: 10px;
+	top: 10px;
+	transition: 0.2s ease-out all;
+	-moz-transition: 0.2s ease-out all;
+	-webkit-transition: 0.2s ease-out all;
+}
+
+/* active state */
+input[type=text]:focus~label,
+input[type=text]:valid~label {
+	top: -20px;
+	font-size: 14px;
+	color: var(--textInputAccent);
+}
+
+/* BOTTOM BARS ================================= */
+.bar {
+	position: relative;
+	display: block;
+	width: 100%;
+}
+
+.bar:before,
+.bar:after {
+	content: '';
+	height: 2px;
+	width: 0;
+	bottom: 1px;
+	position: absolute;
+	background-repeat: no-repeat;
+	background: var(--textInputAccent);
+	transition: 0.2s ease-out all;
+	-moz-transition: 0.2s ease-out all;
+	-webkit-transition: 0.2s ease-out all;
+}
+
+.bar:before {
+	left: 50%;
+}
+
+.bar:after {
+	right: 50%;
+}
+
+/* active state */
+input[type=text]:focus~.bar:before,
+input[type=text]:focus~.bar:after {
+	width: 50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.highlight {
+	position: absolute;
+	height: 60%;
+	width: 100px;
+	top: 25%;
+	left: 0;
+	pointer-events: none;
+	opacity: 0.5;
+}
+
+/* active state */
+input[type=text]:focus~.highlight {
+	-webkit-animation: inputHighlighter 0.3s ease-out;
+	-moz-animation: inputHighlighter 0.3s ease-out;
+	animation: inputHighlighter 0.3s ease-out;
+}
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+	from {
+		background: var(--textInputAccent);
+	}
+
+	to {
+		width: 0;
+		background: transparent;
+	}
+}
+
+@-moz-keyframes inputHighlighter {
+	from {
+		background:var(--textInputAccent);
+	}
+
+	to {
+		width: 0;
+		background: transparent;
+	}
+}
+
+@keyframes inputHighlighter {
+	from {
+		background: var(--textInputAccent);
+	}
+
+	to {
+		width: 0;
+		background: transparent;
+	}
+}
