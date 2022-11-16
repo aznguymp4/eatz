@@ -24,7 +24,7 @@ Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshot
 ## Accessing the Screenshots
 When playing DDR, pressing 1️⃣ at the results screen will send the image to your account. To access the image(s), do the following:
 
-![PlayShare guide](https://media.discordapp.net/attachments/860985407452479508/1041973885450584064/guide.png)
+![PlayShare guide](./src/guide.png)
 
 ## Using EATZ and Uploading to ZiV
 1. Paste in image URLs or tweet URLs that contain PlayShare screenshots.
@@ -40,4 +40,4 @@ When playing DDR, pressing 1️⃣ at the results screen will send the image to 
 6. Open the `Console` tab in DevTools
 7. Paste the command, and you're done. [!!!](#stuff)
 
-![thumbnail](https://media.discordapp.net/attachments/860985407452479508/1041986453506375680/thumb.png)
+![thumbnail](./src/thumb.png)
