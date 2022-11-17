@@ -38,6 +38,6 @@ When playing DDR, pressing 1️⃣ at the results screen will send the image to 
 	4. Use `Command+Option+I` if on macOS.
 	- If you can't open DevTools on Safari, enable Developer mode: `Command+,`>`Advanced`>`Show Develop menu`
 6. Open the `Console` tab in DevTools
-7. Paste the command, and you're done. [!!!](#stuff)
+7. Paste the command, and you're done. [!!!](#notes)
 
 ![thumbnail](./src/thumb.png)
