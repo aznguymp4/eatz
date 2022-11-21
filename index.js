@@ -1,3 +1,4 @@
+console.log('123089128903')
 const OCR = window.tesseract
 const TPKAPI = 'https://tweetpik.com/api/tweets/'
 
@@ -14,7 +15,7 @@ let charts = {};
 	fetch(`./chartIDs/${d}.json`).then(dat=>{dat.json().then(json=>{ charts[d]=json })})
 })
 
-document.getElementById('urlAdd').addEventListener('click',e=>{
+function urlAdd() {
 	let newInput = urlInputEle.cloneNode(true)
 	let txtInput = newInput.getElementsByTagName('input')[0]
 	URLsGroup.appendChild(newInput)
@@ -22,21 +23,22 @@ document.getElementById('urlAdd').addEventListener('click',e=>{
 	txtInput.select()
 	txtInput.addEventListener('focusout',()=>{
 		if(txtInput.value) return
+		txtInput.removeEventListener('focusout',()=>{})
 		newInput.remove()
 	})
 	
 	if(!autoPaste.checked) return
 	navigator.clipboard.readText().then(text => {
 		txtInput.value = text
-	}).catch(console.log);
+	}).catch(console.log)
 
 	//URLsGroup.innerHTML += urlInputEle.outerHTML
-})
+}
 
-if(localStorage.autoPaste!=undefined) {autoPaste.checked = localStorage.autoPaste} else {localStorage.autoPaste = false}
-autoPaste.addEventListener('change',()=>{localStorage.autoPaste = autoPaste.checked})
+if(localStorage.autoPaste==undefined) {localStorage.autoPaste = false} else {autoPaste.checked = localStorage.autoPaste==='true'}
+autoPaste.addEventListener('change',()=>{console.log(autoPaste.checked);localStorage.autoPaste = autoPaste.checked})
 
-document.getElementById('start').addEventListener('click',()=>{
+function start() {
 	let urls = [].slice.call(document.getElementsByClassName('urlInput')).map(e=>{ return [e,e.value] })
 	codeblock.textContent = ''
 	urls.map(arr => {
@@ -47,8 +49,7 @@ document.getElementById('start').addEventListener('click',()=>{
 			})
 		} else zeniusify(arr[0],url)
 	})
-})
-
+}
 
 function zeniusify(inputElement,imgURL) {
 	let img = new Image()
@@ -70,6 +71,9 @@ function zeniusify(inputElement,imgURL) {
 		ctx.filter = 'invert(0)'
 		ctx.drawImage(cover,0,0,cvs.width,cvs.height)
 		processOCR(inputElement,cvs.toDataURL(),imgURL)
+	}
+	img.onerror=()=>{
+		codeblock.innerHTML += `<div class="NaN">// Invalid URL!<br>// "${escapeHtml(imgURL)}"</div><br>`
 	}
 	img.src = imgURL
 }
@@ -141,12 +145,12 @@ function generateCmd(ocrData) {
 	let j = ocrData.ChartStats.Judge
 	searchChartID(ocrData).then(chart => {
 		codeblock.innerHTML += [
-		`<div class="${ocrData.Difficulty}">// ${chart.OriginalTitle}`,
+		`<div class="${ocrData.Difficulty}">// ${escapeHtml(chart.OriginalTitle)}`,
 		`// ${ocrData.Difficulty=='beg'?'b':(ocrData.Difficulty[0].toUpperCase())}${ocrData.Mode.toUpperCase()}P, Notes: ${chart.ChartStats.Steps}+${chart.ChartStats.Freeze}`,
 		`</div>fetch("https://zenius-i-vanisher.com/v5.2/ddrscoretracker_scoreentry.php", {"headers": {"content-type": "application/x-www-form-urlencoded"},"body": "submit=1&notechartid=${chart.NoteChartID}&difficulty=${ocrData.Mode}${ocrData.Difficulty}&gameid=${gameID.value}&marvelous=${j.Marvelous}&perfect=${j.Perfect}&great=${j.Great}&good=${j.Good}&almost=0&boo=${j.Miss}&ok=${j.OK}&speed=1.5x&boost=Off&appearance=Normal&turn=Normal&dark=Off&scroll=Normal&arrow=Note&other=&pictureid=&comment=${'Semi-automatically+uploaded+with+EATZ+(https%3A%2F%2Fgithub.com%2Faznguymp4%2Featz)'}&videolink=${encodeURIComponent(ocrData.URLEntered)}&pass=on&fullcombo=off","method": "POST"});<br><br>`]
 		.join('<br>').replace(/&/g,'&amp;')
 	}).catch(dat => {
-		codeblock.innerHTML += `<div class="NaN">// Song unrecognized!<br>// <a target="_blank" href="${dat.ImgSrc}">${dat.ImgSrc}</a></div><br>`
+		codeblock.innerHTML += `<div class="NaN">// Song unrecognized!<br>// <a target="_blank" href="${dat.ImgSrc}">${escapeHtml(dat.ImgSrc)}</a></div><br>`
 	})
 }
 
@@ -171,4 +175,9 @@ function getTweetImgs(tweetURL) {
 			}).catch(err)
 		}).catch(err)
 	})
+}
+
+function escapeHtml(unsafe) {
+	// i hate this pls tell me there's a better way :(
+	return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }

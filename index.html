@@ -6,8 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="./index.css"/>
 	<link rel="icon" type="image/x-icon" href="./src/favicon.ico">
-	<script defer src="npm/npm.js"></script>
-	<script defer src="index.js"></script>
+	<script defer src="./npm/npm.js"></script>
+	<script defer src="./index.js"></script>
 	<title>EATZ</title>
 </head>
 <body>
@@ -26,10 +26,10 @@
 					<label>URL</label><div class="progress"></div>
 				</div>
 			</div>
-			<button id="urlAdd">New URL</button>
+			<button id="urlAdd" onclick="urlAdd()">New URL</button>
 			<input type="checkbox" name="autoPaste" id="autoPaste">Auto paste on new</input>
 			<br><br>
-			<button id="start">Generate</button><br><br>
+			<button id="start" onclick="start()">Generate</button><br><br>
 			Game Version
 			<select id="gameID" name="Select Game">
 				<option value="5518">DDR A3 (A3 songs aren't added yet; old songs work)</option>
