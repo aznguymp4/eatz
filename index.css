@@ -8,11 +8,12 @@
 	--defaultFont: GilroyBold, Arial, Helvetica, sans-serif;
 	--lightFont: Gilroy, Arial, Helvetica, sans-serif;
 	--codeBlockFont: Consolas, Menlo, 'Courier New', monospace;
-	--diffBeg: #78acff;
-	--diffBas: rgb(255, 229, 98);
+	--diffBeg: #78ACff;
+	--diffBas: #FFE562;
 	--diffDif: #ED4245;
 	--diffExp: #2ECC71;
 	--diffCha: #E66AFF;
+	--judgeOK: #FF9E1E;
 	--diffNaN: #FFF;
 }
 
@@ -51,7 +52,7 @@ body {
 	background-color: #1f1f1f;
 	color: var(--textColor);
 	font-family: var(--defaultFont);
-	overflow-x: hidden;
+	overflow-x:scroll;
 }
 
 #codeBlock{
@@ -62,14 +63,16 @@ body {
 	cursor: pointer;
 	border-radius: var(--cornerRadius);
 	padding: 10px;
+    white-space: nowrap;
 }
 
-.beg{ color: var(--diffBeg); }
-.bas{ color: var(--diffBas); }
-.dif{ color: var(--diffDif); }
-.exp{ color: var(--diffExp); }
-.cha{ color: var(--diffCha); }
-.NaN{ color: var(--diffNaN); }
+.beg,.good      { color: var(--diffBeg); }
+.bas,.perfect   { color: var(--diffBas); }
+.dif,.miss      { color: var(--diffDif); }
+.exp,.great     { color: var(--diffExp); }
+.cha,.almost    { color: var(--diffCha); }
+.NaN,.marvelous { color: var(--diffNaN); }
+.ok             { color: var(--judgeOK) }
 .NaN a{ color: var(--diffBeg) !important; }
 
 button {
@@ -85,7 +88,6 @@ button {
 	font-weight: 400;
 	min-width: 115px;
 	outline: none;
-	display: block;
 	padding: 10px 15px;
 	text-align: center;
 	transform: translateY(0);

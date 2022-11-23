@@ -1,13 +1,15 @@
 # [EATZ](https://aznguy.com/eatz/) (e-amusement to zenius)
 Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshots to [ZiV DDR Score Tracker](https://zenius-i-vanisher.com/v5.2/ddrscoretracker.php?function=enterscore).
 
-### Latest Version Supported: DDR A20 PLUS
-##### DDR A3 is supported, but no DDR A3 songs have been added to the database just yet.
+### Latest Version (FULLY) Supported: DDR A20 PLUS
+##### DDR A3 is partially supported (some new songs won't be recognized.)
 
 ## Notes
 - ❗️❗️❗️ Uploading scores to ZiV with EATZ does involve pasting console commands, but it is 100% safe! If you're still unsure, this project is open-source so you can look at the code.
 - EATZ uses [tesseract.js](https://github.com/naptha/tesseract.js) (compiled with [browserify](https://github.com/browserify/browserify)) to scan your screenshots for data, such as song names, judgement counts, etc.
 - EATZ currently doesn't scan for chart modifiers (speed mod, boost, turn, etc.), so x1.5 <img src="https://raw.githubusercontent.com/Curilang/DDR-A3-THEME/main/Themes/DDR%20A3/Graphics/OptionIcon/P1/daopic0000_1p_speed_x150.png" height="22px"> and Note <img src="https://media.discordapp.net/emojis/939036886901616690.gif" height="22px"> will be set by default.
+- Compatible with both [DDR-A-Type](https://imgur.com/a/krUPbNo) and [DDR-2014-Type](https://media.discordapp.net/attachments/860985407452479508/1044055060671385651/unknown.png) screenshot formats.
+- Does not support Courses.
 - There may be some songs that EATZ can't recognize when scanning screenshots. It doesn't happen very often but unfortunately, you'll have to enter those outliers manually.
 
 ## Usage
@@ -17,9 +19,10 @@ Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshot
 
 
 ## Setting up PlayShare
-1. Download **[e-amusementアプリ](https://eam.573.jp/app/web/howto/?page=playshare.html)** on your [iOS](https://apps.apple.com/jp/app/id680436505) or [Android](https://play.google.com/store/apps/details?id=jp.konami.eam.link) device.
+1. Download **[e-amusementアプリ](https://eam.573.jp/app/web/howto/?page=playshare.html&share_game=ddr)** on your [iOS](https://apps.apple.com/jp/app/id680436505) or [Android](https://play.google.com/store/apps/details?id=jp.konami.eam.link) device.
 2. Log into your KONAMI ID Account that is linked to your e-amusement card you use when playing DDR at the arcade.
-3. After logging in, you will unlock the feature to save in-game screenshots when playing DDR by pressing 1️⃣ on the numpad at the results screen.
+3. After logging in, you will unlock the feature to save in-game screenshots when playing DDR by pressing 1️⃣ on the numpad at the results screen:
+![Results Screen PlayShare screenshot saving](./src/result-apng.png)
 
 ## Accessing the Screenshots
 When playing DDR, pressing 1️⃣ at the results screen will send the image to your account. To access the image(s), do the following:
