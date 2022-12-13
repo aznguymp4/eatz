@@ -207,7 +207,7 @@ function selectText(containerid) {
 
 function getTweetImgs(tweetURL) {
 	return new Promise((res,err) => {
-		fetch(`https://aznbotmp4.herokuapp.com/IHujTBTn6qCqdvAm7eYiGOrYrDfmjry6?redir=${encodeURIComponent(`${TPKAPI}${tweetURL.match(/(?<=status\/)\d{1,}/)[0]}`)}`).then(a=>{
+		fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(`${TPKAPI}${tweetURL.match(/(?<=status\/)\d{1,}/)[0]}`)}`).then(a=>{
 			a.json().then(b=>{
 				res(b.media.map(media=>{return media.url }))
 			}).catch(err)
