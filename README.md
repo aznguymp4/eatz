@@ -1,6 +1,7 @@
 # [EATZ](https://aznguy.com/eatz/) (e-amusement to zenius)
 Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshots to [ZiV DDR Score Tracker](https://zenius-i-vanisher.com/v5.2/ddrscoretracker.php?function=enterscore).
 
+![thumbnail](./src/thumb.png)
 ### Latest Version (FULLY) Supported: DDR A20 PLUS
 ##### DDR A3 is partially supported (some new songs won't be recognized.)
 
@@ -47,5 +48,3 @@ When playing DDR, pressing 1️⃣ at the results screen will send the image to 
 8. At the top of the page, use the **bulk image uploader** and upload the SAME files you selected on EATZ.
 9. Click the button to start uploading the images and submitting scores.
 10. You're done! [!!!](#notes)
-
-![thumbnail](./src/thumb.png)
