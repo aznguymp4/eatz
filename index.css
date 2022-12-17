@@ -38,8 +38,7 @@ a:hover{
 
 #left,#right{
 	display: block;
-/* 	border: green solid;
- */	width: 50%;
+	width: 50%;
 	margin-left: 10px;
 	margin-right: 10px;
 }
@@ -52,12 +51,13 @@ body {
 	background-color: #1f1f1f;
 	color: var(--textColor);
 	font-family: var(--defaultFont);
-	overflow-x:scroll;
+	overflow-x: visible;
+	min-width: 777px;
 }
 
 #codeBlock{
 	font-family: var(--codeBlockFont);
-	font-size: 14px;
+	font-size: 13.6px;
 	background-color: #333;
 	color: #888;
 	cursor: pointer;
@@ -74,8 +74,35 @@ body {
 .NaN,.marvelous { color: var(--diffNaN); }
 .ok             { color: var(--judgeOK) }
 .NaN a{ color: var(--diffBeg) !important; }
+.command {
+	padding-top: 5px;
+	height: 56px;
+}
+.viewUnrecognizedFile {
+	background: none;
+	border: 0px;
+	font-family: var(--codeBlockFont);
+	font-size: 13.6px;
+	color: var(--diffBeg);
+	padding: 0px;
+	font-weight: bold;
+	cursor: pointer;
+}
+.viewUnrecognizedFile:hover {
+	text-decoration: underline;
+}
 
-button {
+#loadingBar {
+	background: var(--buttonPrimary);
+	height: 4px;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	transition: width ease-out 150ms;
+	z-index: 100;
+}
+
+.greenBtn {
 	background-color: var(--buttonPrimary);
 	border: 1px solid var(--buttonSecondary);
 	border-radius: var(--cornerRadius);
@@ -97,58 +124,131 @@ button {
 	touch-action: manipulation;
 }
 
-button:hover {
+.greenBtn:hover {
 	box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
 	opacity: 80%;
 	transform: translateY(-1px);
 }
 
-button:active {
+.greenBtn:active {
 	transform: translateY(2px);
 }
 
 /* form starting stylings ------------------------------- */
-.TextInputGroup {
+.imgInput {
 	position: relative;
 	margin-bottom: 25px;
 }
 
+/* input[type=file] {
+	padding: 8px 8px 8px 8px;
+	width: calc(100% - 81px);
+	font: var(--defaultFont);
+	border-radius: var(--cornerRadius);
+	color: #999;
+	cursor: pointer;
+	background-color: #333;
+}
+input[type=file]:valid {
+	color: var(--textInputAccent);
+}
+input[type=file]::file-selector-button {
+	background-color: var(--buttonPrimary);
+	border: 1px solid var(--buttonSecondary);
+	border-radius: calc(var(--cornerRadius)/2);
+	color: #fff;
+	font-family: var(--defaultFont);
+} */
+input[type=file] {
+	display: none;
+}
+.fileName {
+	padding: 8px 8px 8px 8px;
+	width: calc(100% - 88px);
+	font: var(--defaultFont);
+	border-radius: var(--cornerRadius);
+	color: #999;
+	cursor: pointer;
+	background-color: #333;
+}
+.fileInputThumb {
+	background-color: #333;
+	object-fit: contain;
+	width: 52px;
+	height: 52px;
+	border-radius: var(--cornerRadius);
+	position: absolute;
+	right: 0px;
+	bottom: -8px;
+}
+
 input[type=text] {
 	font-size: 18px;
-	padding: 10px 10px 10px 10px;
+	padding: 8px 8px 8px 8px;
 	display: block;
 	font-family: var(--lightFont);
 	background-color: #333;
 	color: var(--textColor);
 	border-radius: var(--cornerRadius);
-	width: calc(100% - 20px);
+	width: calc(100% - 88px);
 	border: none;
 }
-
+.urlInputThumbList {
+	position: absolute;
+	/* border: solid green 1px; */
+	right: 0px;
+	top: -13px;
+	display: block;
+	width: 52px;
+	height: 500px;
+}
+.urlInputThumb {
+	background-color: #333;
+	object-fit: contain;
+	width: 52px;
+	height: 52px;
+	border-radius: var(--cornerRadius);
+	position: relative;
+	z-index: 10;
+	margin-top: 5px;
+}
+.urlInputThumb + .urlInputThumb {
+	padding: 0px;
+}
 input[type=text]:focus {
 	outline: none;
 }
 
 /* LABEL ======================================= */
-label {
-	color: #999;
-	font-size: 18px;
-	font-weight: normal;
-	position: absolute;
-	pointer-events: none;
-	left: 10px;
-	top: 10px;
-	transition: 0.2s ease-out all;
-	-moz-transition: 0.2s ease-out all;
-	-webkit-transition: 0.2s ease-out all;
-}
-
-/* active state */
-input[type=text]:focus~label,
-input[type=text]:valid~label {
+.labelFile,.labelURL {
 	top: -20px;
+	position: relative;
 	font-size: 14px;
 	color: var(--textInputAccent);
+}
+.progress {
+	top: -22px;
+	position: relative;
+}
+.imgTopLabel {
+	display: flex;
+	height: 0px;
+}
+.removeBtn {
+	top: -21px;
+	background: none;
+	border: 0px;
+	color: var(--diffDif);
+	font-family: var(--defaultFont);
+	font-size: 14px;
+	position: relative;
+}
+.removeBtn:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+.removeBtn:active {
+	color: var(--diffNaN)
 }
 
 /* BOTTOM BARS ================================= */
@@ -173,7 +273,7 @@ input[type=text]:valid~label {
 }
 
 .bar:before {
-	left: 50%;
+	left: calc(50% - 72px);
 }
 
 .bar:after {

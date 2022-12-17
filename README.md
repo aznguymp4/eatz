@@ -7,9 +7,10 @@ Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshot
 ## Notes
 - ❗️❗️❗️ Uploading scores to ZiV with EATZ does involve pasting console commands, but it is 100% safe! If you're still unsure, this project is open-source so you can look at the code.
 - EATZ uses [tesseract.js](https://github.com/naptha/tesseract.js) (compiled with [browserify](https://github.com/browserify/browserify)) to scan your screenshots for data, such as song names, judgement counts, etc.
-- EATZ currently doesn't scan for chart modifiers (speed mod, boost, turn, etc.), so x1.5 <img src="https://raw.githubusercontent.com/Curilang/DDR-A3-THEME/main/Themes/DDR%20A3/Graphics/OptionIcon/P1/daopic0000_1p_speed_x150.png" height="22px"> and Note <img src="https://media.discordapp.net/emojis/939036886901616690.gif" height="22px"> will be set by default.
+- EATZ currently doesn't scan for chart modifiers (speed mod, boost, turn, etc.), so x1.5 <img src="https://raw.githubusercontent.com/Curilang/DDR-A3-THEME/main/Themes/DDR%20A3/Graphics/OptionIcon/P1/daopic0000_1p_speed_x150.png" height="22px"> and Note <img src="https://media.discordapp.net/emojis/939036886901616690.gif" height="22px"> will be selected by default.
 - Compatible with both [DDR-A-Type](https://imgur.com/a/krUPbNo) and [DDR-2014-Type](https://media.discordapp.net/attachments/860985407452479508/1044055060671385651/unknown.png) screenshot formats.
 - Does not support Courses.
+- Does not support failed scores. (<img src="https://media.discordapp.net/attachments/860985407452479508/1053205928733835284/Grade_Failed.png" height="22px">)
 - There may be some songs that EATZ can't recognize when scanning screenshots. It doesn't happen very often but unfortunately, you'll have to enter those outliers manually.
 
 ## Usage
@@ -30,7 +31,7 @@ When playing DDR, pressing 1️⃣ at the results screen will send the image to 
 ![PlayShare guide](./src/guide.png)
 
 ## Using EATZ and Uploading to ZiV
-1. Paste in image URLs or tweet URLs that contain PlayShare screenshots.
+1. On EATZ, Upload PlayShare screenshot files or paste image/tweet URLs that contain PlayShare screenshots.
 2. Click **Generate** to scan the screenshots and generate the console command(s).
 3. Once generated, click the code block on the right to select the entire command and **copy it**.
 4. Head over to the [ZiV DDR Score Tracker](https://zenius-i-vanisher.com/v5.2/ddrscoretracker.php?function=enterscore) website
@@ -41,6 +42,10 @@ When playing DDR, pressing 1️⃣ at the results screen will send the image to 
 	4. Use `Command+Option+I` if on macOS.
 	- If you can't open DevTools on Safari, enable Developer mode: `Command+,`>`Advanced`>`Show Develop menu`
 6. Open the `Console` tab in DevTools
-7. Paste the command, and you're done. [!!!](#notes)
+7. Paste the command. __If you used local file uploads, read the next step.__ Otherwise, you're done!
+The next steps are for local image files ONLY!:
+8. At the top of the page, use the **bulk image uploader** and upload the SAME files you selected on EATZ.
+9. Click the button to start uploading the images and submitting scores.
+10. You're done! [!!!](#notes)
 
 ![thumbnail](./src/thumb.png)

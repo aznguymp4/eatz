@@ -11,25 +11,34 @@
 	<title>EATZ</title>
 </head>
 <body>
+	<div id="loadingBar" style="width:0%;"></div>
 	<center>
 		<h1 style="height: 15px;">e-amusement to Zenius</h1>
 		<h4 style="color: #888;">created by <a target="_blank" href="https://github.com/aznguymp4/eatz">aznguy.mp4</a></h4>
 	</center>
 	<div id="groups">
 		<div id="left">
-			<h3>Image URLs and/or Tweet URLs (<a target="_blank" href="https://pbs.twimg.com/media/FgYRFeaWQAE49kk?format=jpg">example</a>) </h3><br>
-			<div id="URLs">
-				<div class="TextInputGroup">
+			<h3>Attach images <span style="font-size:12px;color:#777">(image URLs, tweet URLs, and image files supported.)</span> (<a target="_blank" href="https://pbs.twimg.com/media/FgYRFeaWQAE49kk?format=jpg">example</a>) </h3><br>
+			<input type="file" name="fileUpload" id="fileUpl" accept=".jpg,.jpeg,.png" multiple>
+			<div id="files">
+				<div class="TextInputGroup imgInput">
+					<div class="imgTopLabel"><div class="labelURL">Image/Tweet URL</div><button class="urlRemove removeBtn">Remove</button><div class="progress"></div></div>
 					<input class="urlInput" type="text" onClick="this.select();" required>
 					<span class="highlight"></span>
 					<span class="bar"></span>
-					<label>URL</label><div class="progress"></div>
+					<div class="urlInputThumbList"><canvas class="urlInputThumb"></canvas></div>
+				</div>
+				<div class="FileInputGroup imgInput">
+					<div class="imgTopLabel"><div class="labelFile">Image File</div><button class="fileRemove removeBtn">Remove</button><div class="progress"></div></div>
+					<div class="fileName">...</div>
+					<canvas class="fileInputThumb"></canvas>
 				</div>
 			</div>
-			<button id="urlAdd" onclick="urlAdd()">New URL</button>
+			<label class="greenBtn" id="fileAdd" for="fileUpl">Upload Image File(s)</label><br><br>
+			<button class="greenBtn" id="urlAdd" onclick="urlAdd()">Attach Image URL</button>
 			<input type="checkbox" name="autoPaste" id="autoPaste">Auto paste on new</input>
 			<br><br>
-			<button id="start" onclick="start()">Generate</button><br><br>
+			<button class="greenBtn" id="start" onclick="start()">Generate</button><br><br>
 			Game Version
 			<select id="gameID" name="Select Game">
 				<option value="5518">DDR A3 (partial support)</option>
