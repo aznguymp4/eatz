@@ -34,7 +34,7 @@ When playing DDR, pressing 1️⃣ at the results screen will send the image to 
 1. On EATZ, Upload PlayShare screenshot files or paste image/tweet URLs that contain PlayShare screenshots.
 2. Click **Generate** to scan the screenshots and generate the console command(s).
 3. Once generated, click the code block on the right to select the entire command and **copy it**.
-4. Head over to the [ZiV DDR Score Tracker](https://zenius-i-vanisher.com/v5.2/ddrscoretracker.php?function=enterscore) website
+4. Head over to the [ZiV DDR Score Tracker](https://zenius-i-vanisher.com/v5.2/ddrscoretracker.php?function=enterscore) website and <ins>make sure you're logged in</ins>.
 5. Open DevTools; There are many methods to do so:
 	1. Use `F12`.
 	2. Right click anywhere and click `Inspect Element`.
@@ -43,7 +43,7 @@ When playing DDR, pressing 1️⃣ at the results screen will send the image to 
 	- If you can't open DevTools on Safari, enable Developer mode: `Command+,`>`Advanced`>`Show Develop menu`
 6. Open the `Console` tab in DevTools
 7. Paste the command. __If you used local file uploads, read the next step.__ Otherwise, you're done!
-The next steps are for local image files ONLY!:
+### The next steps are for <ins>local image files **ONLY**</ins>!:
 8. At the top of the page, use the **bulk image uploader** and upload the SAME files you selected on EATZ.
 9. Click the button to start uploading the images and submitting scores.
 10. You're done! [!!!](#notes)
