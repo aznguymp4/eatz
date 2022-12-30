@@ -46,7 +46,7 @@ submit.addEventListener('click',()=>{
 						if(json.success) {
 							score.cont.body = score.cont.body.replace('pictureid=12345',`pictureid=${json.pictureid}`);
 							if(score.imgURL) score.cont.body = score.cont.body.replace('videolink=',`videolink=${encodeURIComponent(imgURL)}`);
-							fetch('https://zenius-i-vanisher.com/v5.2/ddrscoretracker_scoreentry.php', score)
+							fetch('https://zenius-i-vanisher.com/v5.2/ddrscoretracker_scoreentry.php', score.cont)
 							.then(res=>{
 								console.log(res);
 								body.prepend(`✅ Success: ${file.name}`);
