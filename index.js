@@ -231,6 +231,7 @@ function processOCR(inputElement,imgURL,srcImg) {
 			
 			let j = dat.ChartStats.Judge
 			searchChartID(dat).then(chart => {
+				inputElement.parentElement.parentElement.appendChild(inputElement.parentElement)
 				percent.textContent = '✅ 100%'
 				if(dat.URLEntered) { // Image/Tweet URL
 					codeblock.innerHTML += [
@@ -269,10 +270,9 @@ function processOCR(inputElement,imgURL,srcImg) {
 				console.error(dat)
 				inputElement.parentElement.parentElement.prepend(inputElement.parentElement)
 				percent.textContent = '❌ Unrecognized!'
-				codeblock.innerHTML = `<div class="command"><div class="NaN">// Song unrecognized!<br>// You may have to submit the score manually. 😞<br>// ${dat.ImgSrc.toString().startsWith('data:image')? `<button class="viewUnrecognizedFile" onclick=\"window.open().document.write('<title>EATZ - Unrecognized Song</title><img src=\\'${dat.ImgSrc}\\'></img>')\">View Image</button>` : `<a class="viewUnrecognizedFile" target="_blank" href="${dat.ImgSrc}">${escapeHtml(dat.ImgSrc)}</a>`}</div></div>`
+				codeblock.innerHTML = `<div class="command"><div class="NaN">// Song unrecognized!<br>// You may have to submit the score manually. 😞<br>// ${dat.ImgSrc.toString().startsWith('data:image')? `<button class="viewUnrecognizedFile" onclick=\"window.open().document.write('<title>EATZ - Unrecognized Song</title><img src=\\'${dat.ImgSrc}\\'></img>')\">View Image</button>` : `<a class="viewUnrecognizedFile" target="_blank" href="${dat.ImgSrc}">${escapeHtml(dat.ImgSrc)}</a>`}</div></div>` + codeblock.innerHTML
 			}).finally(()=>{
 				running--;
-				inputElement.parentElement.parentElement.appendChild(inputElement.parentElement)
 				if(!running) { // done scanning all imgs
 					startBtn.textContent = 'Generate'
 					if(!Object.keys(fileScores).length) return
