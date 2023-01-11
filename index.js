@@ -263,7 +263,7 @@ function processOCR(inputElement,imgURL,srcImg) {
 					codeblock.innerHTML += [
 					`<div class="command"><span class="${dat.Difficulty}">// ${chart.OriginalTitle}`,
 					`// ${dat.Difficulty=='beg'?'b':(dat.Difficulty[0].toUpperCase())}${dat.Mode.toUpperCase()}P, Notes: ${chart.ChartStats.Steps}+${chart.ChartStats.Freeze}</span>`,
-					`// Image is an uploaded file, paste the command in Zenius to proceed to the next step.`]
+					`// ${`<button class="viewUnrecognizedFile" onclick=\"window.open().document.write('<title>EATZ - Image File</title><img src=\\'${dat.ImgSrc}\\'></img>')\">Image</button>`} is an uploaded file, paste the command in Zenius to proceed to the next step.`]
 					.join('<br>').replace(/&/g,'&amp;')
 				}
 			}).catch(dat => {
