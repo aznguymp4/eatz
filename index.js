@@ -266,8 +266,7 @@ function processOCR(inputElement,imgURL,srcImg) {
 					`// ${`<button class="viewUnrecognizedFile" onclick=\"window.open().document.write('<title>EATZ - Image File</title><img src=\\'${dat.ImgSrc}\\'></img>')\">Image</button>`} is an uploaded file, paste the command in Zenius to proceed to the next step.`]
 					.join('<br>').replace(/&/g,'&amp;')
 				}
-			}).catch(dat => {
-				console.error(dat)
+			}).catch(e => {
 				inputElement.parentElement.parentElement.prepend(inputElement.parentElement)
 				percent.textContent = '❌ Unrecognized!'
 				codeblock.innerHTML = `<div class="command"><div class="NaN">// Song unrecognized!<br>// You may have to submit the score manually. 😞<br>// ${dat.ImgSrc.toString().startsWith('data:image')? `<button class="viewUnrecognizedFile" onclick=\"window.open().document.write('<title>EATZ - Unrecognized Song</title><img src=\\'${dat.ImgSrc}\\'></img>')\">View Image</button>` : `<a class="viewUnrecognizedFile" target="_blank" href="${dat.ImgSrc}">${escapeHtml(dat.ImgSrc)}</a>`}</div></div>` + codeblock.innerHTML
