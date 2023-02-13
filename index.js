@@ -9,14 +9,18 @@ const filePick = document.getElementById('fileUpl')
 const autoPaste = document.getElementById('autoPaste')
 const gameID = document.getElementById('gameID')
 const codeblock = document.getElementById('codeBlock')
+const filecodeblock = document.getElementById('fileScores')
 const [cover,coverOld] = [new Image(),new Image()]
+const letters = [...'abcdefghijklmnopqrstuvwxyz']
 cover.src = './src/cover.png'; coverOld.src = './src/cover_old.png'
 let fileUploadJS; fetch(`./fileUpload.js`).then(dat=>{dat.text().then(text=>{fileUploadJS = text})})
 let running = 0
+let commandIdx = 0
 let [OCRqueue,OCRmax] = [0,((performance.memory.jsHeapSizeLimit.toString()[0]-0)*1.5) || 4]
 let progressSum = []
 let fileScores = {}
 let charts = {}
+const abrv = {'sbeg':'🔵 bSP • Single Beginner','sbas':'🟠 BSP • Single Basic','sdif':'🔴 DSP • Single Difficult','sexp':'🟢 ESP • Single Expert','scha':'🟣 CSP • Single Challenge','dbas':'🟠 BDP • Double Basic','ddif':'🔴 DDP • Double Difficult','dexp':'🟢 EDP • Double Expert','dcha':'🟣 CDP • Double Challenge'}
 const gameIDs = {
 	'5518': 'A3',
 	'5156': 'A20PLUS',
@@ -27,7 +31,7 @@ const gameIDs = {
 for (const id in gameIDs) {
 	let dir = gameIDs[id]
 	charts[id] = {};
-	['sbeg','sbas','sdif','sexp','scha','dbas','ddif','dexp','dcha'].map(d => {
+	Object.keys(abrv).map(d => {
 		fetch(`./chartIDs/${dir}/${d}.json`).then(dat=>{dat.json().then(json=>{ charts[id][d]=json })})
 	})
 }
@@ -101,8 +105,7 @@ function start() {
 	if(running) return; running = urls.length
 	progressSum = Array(urls.length).fill(0)
 	startBtn.textContent = 'Running...'
-	codeblock.textContent = ''
-	codeblock.FILEUPLOADPREPARED = false
+	codeblock.innerHTML = '<div id="fileScores"></div>'
 	Array.from(document.querySelectorAll('.urlInputThumbList')).map(li=>{
 		Array.from(li.querySelectorAll('canvas')).map((cvs,idx)=>{
 			if(idx) cvs.remove()
@@ -185,8 +188,10 @@ function zeniusify(inputElement,imgURL) {
 }
 
 function processOCR(inputElement,imgURL,srcImg) {
-	//window.open().document.write(`<img src="${imgURL}"></img>`)
+	// window.open().document.write(`<img src="${imgURL}"></img>`)
+	const file = inputElement.FILE_ATTR
 	let percent = inputElement.parentElement.getElementsByClassName('progress')[0]
+	fileScores = {}
 	percent.textContent = 'Waiting...'
 	function wait() {
 		if(OCRqueue>=OCRmax) {
@@ -218,26 +223,35 @@ function processOCR(inputElement,imgURL,srcImg) {
 					Freeze: 0
 				}
 			};
-			if(!/(beg|bas|dif|exp|cha)/.test(dat.Difficulty)) { // difficulty does not match strict search, use fuzzy search 
-				if (/(beg|.eg|b.g|be.|.e.|^be|g$)/.test(dat.Difficulty)) dat.Difficulty = 'beg'
-				else if(/(bas|.as|b.s|ba.|.a.|^ba|s$)/.test(dat.Difficulty)) dat.Difficulty = 'bas'
-				else if (/(dif|.if|d.f|di.|.i.|^d|f$)/.test(dat.Difficulty)) dat.Difficulty = 'dif'
-				else if (/(exp|.xp|e.p|ex.|.x.|^e|p$)/.test(dat.Difficulty)) dat.Difficulty = 'exp'
-				else if (/(cha|.ha|c.a|ch.|.h.|^c|a$)/.test(dat.Difficulty)) dat.Difficulty = 'cha'
+			if(!/(s|d)/.test(dat.Mode)) dat.Mode = 's' // default
+			if(!/(beg|bas|dif|exp|cha)/.test(dat.Difficulty)) { // difficulty does not match strict search, use fuzzy search
+				if (/(beg|.eg|b.g|be.|.e.|^be|g$|be|eg)/.test(dat.Difficulty)) dat.Difficulty = 'beg'
+				else if(/(bas|.as|b.s|ba.|.a.|^ba|s$|ba|as)/.test(dat.Difficulty)) dat.Difficulty = 'bas'
+				else if (/(dif|.if|d.f|di.|.i.|^d|f$|d|i|f)/.test(dat.Difficulty)) dat.Difficulty = 'dif'
+				else if (/(exp|.xp|e.p|ex.|.x.|^e|p$|ex|xp)/.test(dat.Difficulty)) dat.Difficulty = 'exp'
+				else if (/(cha|.ha|c.a|ch.|.h.|^c|a$|ch|ha)/.test(dat.Difficulty)) dat.Difficulty = 'cha'
+				else dat.Difficulty = 'exp' // default
 			}
-			['Marvelous','Perfect','Great','Good','OK','Miss'].map(j=>{dat.ChartStats.Judge[j] = parseInt(text.match(new RegExp(`(?<=${j} {0,})\\d{1,}`,'i'))) })
-			dat.ChartStats.Steps = ['Marvelous','Perfect','Great','Good','Miss'].map(j=>{return dat.ChartStats.Judge[j]}).reduce((a,b)=>a+b,0)
-			dat.ChartStats.Freeze = dat.ChartStats.Judge.OK // doesn't count N.G. (missed freeze arrows)
+			const j = dat.ChartStats.Judge;
+			['Marvelous','Perfect','Great','Good','OK','Miss'].map(jd=>{j[jd] = parseInt(text.match(new RegExp(`(?<=${jd} {0,})\\d{1,}`,'i'))) })
+			dat.ChartStats.Steps = ['Marvelous','Perfect','Great','Good','Miss'].map(jd=>{return j[jd]}).reduce((a,b)=>a+b,0)
+			dat.ChartStats.Freeze = j.OK // doesn't count N.G. (missed freeze arrows)
 			
-			let j = dat.ChartStats.Judge
-			searchChartID(dat).then(chart => {
+			let localSongCode = commandIdx++
+			searchChartID(dat).then(res => {
+				console.log(res)
+				let possibleCharts = Object.values(res[0])
+				let chart = possibleCharts.length==1? possibleCharts[0] : possibleCharts.find(c=>c.NoteChartID==Object.keys(res[1]).reduce((a,b)=>res[1][a]>res[1][b]?a:b)) // default to chart that has most matches
+				// const selectMenu = `<div class="command"><div class="${dat.Difficulty}">/* <select oninput="document.getElementById('NoteChartID-${localSongCode}').innerText = this.value"><option disabled>─── Approximate Guesses (found by using Note+Freeze count) ───</option>${possibleCharts.map(c=>{return `<option ${c.NoteChartID==chart.NoteChartID?'selected':''} value="${c.NoteChartID}">${c.OriginalTitle}</option>`})}<option disabled>─── All Other Songs ───</option>${Object.values(charts[gameID.value][`${dat.Mode}${dat.Difficulty}`]).map(c => {return res[0][c.NoteChartID]? '' : `<option value="${c.NoteChartID}">${c.OriginalTitle}</option>`})}</select>`
+				const selectMenu = `<div class="command"><div class="${dat.Difficulty}">/* <select oninput="document.getElementById('NoteChartID-${localSongCode}').innerText = this.value"><option disabled>─── Approximate Guesses (found by using Note+Freeze count) ───</option>${possibleCharts.map(c=>{return `<option ${c.NoteChartID==chart.NoteChartID?'selected':''} value="${c.NoteChartID}">${c.OriginalTitle}</option>`})}<option disabled>─── All Other Songs ───</option>${getSongOptionList(dat.Mode+dat.Difficulty, Object.keys(res[1]))}</select>`
+
 				inputElement.parentElement.parentElement.appendChild(inputElement.parentElement)
 				percent.textContent = '✅ 100%'
 				if(dat.URLEntered) { // Image/Tweet URL
 					codeblock.innerHTML += [
-						`<div class="command"><div class="${dat.Difficulty}">// ${chart.OriginalTitle}`,
-						`// ${dat.Difficulty=='beg'?'b':(dat.Difficulty[0].toUpperCase())}${dat.Mode.toUpperCase()}P, Notes: ${chart.ChartStats.Steps}+${chart.ChartStats.Freeze}`,
-					`</div>fetch("https://zenius-i-vanisher.com/v5.2/ddrscoretracker_scoreentry.php",{"headers":{"content-type":"application/x-www-form-urlencoded"},"body":"submit=1&notechartid=${chart.NoteChartID}&difficulty=${dat.Mode}${dat.Difficulty}&gameid=${gameID.value}&<span class="marvelous">marvelous</span>=<span class="marvelous">${j.Marvelous}</span>&<span class="perfect">perfect</span>=<span class="perfect">${j.Perfect}</span>&<span class="great">great</span>=<span class="great">${j.Great}</span>&<span class="good">good</span>=<span class="good">${j.Good}</span>&<span class="almost">almost</span>=<span class="almost">0</span>&<span class="miss">boo</span>=<span class="miss">${j.Miss}</span>&<span class="ok">ok</span>=<span class="ok">${j.OK}</span>&speed=1.5x&boost=Off&appearance=Normal&turn=Normal&dark=Off&scroll=Normal&arrow=Note&other=&pictureid=&comment=${'Semi-automatically+uploaded+with+EATZ+(https%3A%2F%2Fgithub.com%2Faznguymp4%2Featz)'}&videolink=${encodeURIComponent(dat.URLEntered)}&pass=on&fullcombo=${j.Miss?'off':'on'}","method":"POST"});<br><br></div>`]
+					selectMenu,
+					`// ${dat.Difficulty=='beg'?'b':(dat.Difficulty[0].toUpperCase())}${dat.Mode.toUpperCase()}P, Notes: ${chart.ChartStats.Steps}+${chart.ChartStats.Freeze} */`,
+					`</div>fetch("https://zenius-i-vanisher.com/v5.2/ddrscoretracker_scoreentry.php",{"headers":{"content-type":"application/x-www-form-urlencoded"},"body":"submit=1&notechartid=<span id="NoteChartID-${localSongCode}">${chart.NoteChartID}</span>&difficulty=${dat.Mode}${dat.Difficulty}&gameid=${gameID.value}&<span class="marvelous">marvelous</span>=<span class="marvelous">${j.Marvelous}</span>&<span class="perfect">perfect</span>=<span class="perfect">${j.Perfect}</span>&<span class="great">great</span>=<span class="great">${j.Great}</span>&<span class="good">good</span>=<span class="good">${j.Good}</span>&<span class="almost">almost</span>=<span class="almost">0</span>&<span class="miss">boo</span>=<span class="miss">${j.Miss}</span>&<span class="ok">ok</span>=<span class="ok">${j.OK}</span>&speed=1.5x&boost=Off&appearance=Normal&turn=Normal&dark=Off&scroll=Normal&arrow=Note&other=&pictureid=&comment=${'Semi-automatically+uploaded+with+EATZ+(https%3A%2F%2Fgithub.com%2Faznguymp4%2Featz)'}&videolink=${encodeURIComponent(dat.URLEntered)}&pass=on&fullcombo=${j.Miss?'off':'on'}","method":"POST"});<br><br></div>`]
 					.join('<br>').replace(/&/g,'&amp;')
 
 					let freeCvs = inputElement.parentElement.querySelector('.urlInputThumb:not(.usedThumb)')
@@ -251,67 +265,139 @@ function processOCR(inputElement,imgURL,srcImg) {
 						renderSongIcon(newCvs, srcImg)
 					}
 				} else { // Image File
-					const file = inputElement.FILE_ATTR
 					fileScores[`${file.name}/${file.size}`] = {
-						cont: {'headers':{'content-type':'application/x-www-form-urlencoded'},'body':`submit=1&notechartid=${chart.NoteChartID}&difficulty=${dat.Mode}${dat.Difficulty}&gameid=${gameID.value}&marvelous=${j.Marvelous}&perfect=${j.Perfect}&great=${j.Great}&good=${j.Good}&almost=0&boo=${j.Miss}&ok=${j.OK}&speed=1.5x&boost=Off&appearance=Normal&turn=Normal&dark=Off&scroll=Normal&arrow=Note&other=&pictureid=12345&comment=Semi-automatically+uploaded+with+EATZ+(https%3A%2F%2Fgithub.com%2Faznguymp4%2Featz)&videolink=&pass=on&fullcombo=${j.Miss?'off':'on'}`,'method':'POST'},
+						cont: {'headers':{'content-type':'application/x-www-form-urlencoded'},'body':`submit=1&localsongcode=${localSongCode}&notechartid=${chart.NoteChartID}&difficulty=${dat.Mode}${dat.Difficulty}&gameid=${gameID.value}&marvelous=${j.Marvelous}&perfect=${j.Perfect}&great=${j.Great}&good=${j.Good}&almost=0&boo=${j.Miss}&ok=${j.OK}&speed=1.5x&boost=Off&appearance=Normal&turn=Normal&dark=Off&scroll=Normal&arrow=Note&other=&pictureid=12345&comment=Semi-automatically+uploaded+with+EATZ+(https%3A%2F%2Fgithub.com%2Faznguymp4%2Featz)&videolink=&pass=on&fullcombo=${j.Miss?'off':'on'}`,'method':'POST'},
 						song: {
 							diff: dat.Difficulty,
-							mode: dat.Mode,
-							info: chart
+							mode: dat.Mode
 						}
 					}
 					codeblock.innerHTML += [
-					`<div class="command"><span class="${dat.Difficulty}">// ${chart.OriginalTitle}`,
+					// `<div class="command"><span class="${dat.Difficulty}">// ${chart.OriginalTitle}`,
+					selectMenu,
 					`// ${dat.Difficulty=='beg'?'b':(dat.Difficulty[0].toUpperCase())}${dat.Mode.toUpperCase()}P, Notes: ${chart.ChartStats.Steps}+${chart.ChartStats.Freeze}</span>`,
-					`// ${`<button class="viewUnrecognizedFile" onclick=\"window.open().document.write('<title>EATZ - Image File</title><img src=\\'${dat.ImgSrc}\\'></img>')\">Image</button>`} is an uploaded file, paste the command in Zenius to proceed to the next step.`]
+					`// ${`<button class="viewUnrecognizedFile" onclick=\"window.open().document.write('<title>EATZ - Image File</title><img src=\\'${dat.ImgSrc}\\'></img>')\">Image</button>`} is an uploaded file, paste the command in Zenius to proceed to the next step.*/</div>`]
 					.join('<br>').replace(/&/g,'&amp;')
 				}
 			}).catch(e => {
 				inputElement.parentElement.parentElement.prepend(inputElement.parentElement)
 				percent.textContent = '❌ Unrecognized!'
-				codeblock.innerHTML = `<div class="command"><div class="NaN">// Song unrecognized!<br>// You may have to submit the score manually. 😞<br>// ${dat.ImgSrc.toString().startsWith('data:image')? `<button class="viewUnrecognizedFile" onclick=\"window.open().document.write('<title>EATZ - Unrecognized Song</title><img src=\\'${dat.ImgSrc}\\'></img>')\">View Image</button>` : `<a class="viewUnrecognizedFile" target="_blank" href="${dat.ImgSrc}">${escapeHtml(dat.ImgSrc)}</a>`}</div></div>` + codeblock.innerHTML
+				//codeblock.innerHTML = `<div class="command"><div class="NaN">// Song unrecognized!<br>// You may have to submit the score manually. 😞<br>// ${dat.ImgSrc.toString().startsWith('data:image')? `<button class="viewUnrecognizedFile" onclick=\"window.open().document.write('<title>EATZ - Unrecognized Song</title><img src=\\'${dat.ImgSrc}\\'></img>')\">View Image</button>` : `<a class="viewUnrecognizedFile" target="_blank" href="${dat.ImgSrc}">${escapeHtml(dat.ImgSrc)}</a>`}</div></div>` + codeblock.innerHTML
+				if(file) dat.file={name:file.name,size:file.size}
+				dat.localSongCode=localSongCode
+				
+				codeblock.innerHTML = [
+				`<div class="command" id="command-${localSongCode}">/* <select disabled id="unrecognizedSong-${localSongCode}"><option disabled selected>─── Select Mode First ⤵️ ───</option></select>`,
+				`// <select oninput='loadSongList(${localSongCode},this.value,${JSON.stringify(dat)}); document.getElementById("command-${localSongCode}").classList="command "+this.value.substr(1,3)'><option disabled selected>─── Select Mode ───</option><optgroup label="Single">${Object.keys(abrv).map((mode,idx) => {return `<option value="${mode}">${abrv[mode]}</option>${idx==4?`</optgroup><optgroup label="Double">`:''}`})}</optgroup></select>`,
+				`// ${`<button class="viewUnrecognizedFile" onclick=\"window.open().document.write('<title>EATZ - Unrecognized Song</title><img src=\\'${dat.ImgSrc}\\'></img>')\">Image</button>`} is an uploaded file, paste the command in Zenius to proceed to the next step.*/</div>`]
+				.join('<br>').replace(/&/g,'&amp;') + codeblock.innerHTML
+				delete dat.ImgSrc
 			}).finally(()=>{
 				running--;
-				if(!running) { // done scanning all imgs
-					startBtn.textContent = 'Generate'
-					if(!Object.keys(fileScores).length) return
-					codeblock.innerHTML += escapeHtml(fileUploadJS.replace(`{'place':'holder'}`,JSON.stringify(fileScores)))
-					fileScores = {}
-				}
+				if(running) return; // done scanning all imgs
+				setTimeout(() => { alert('Finished scanning each image.\n\nPlease look through each song on the right side and make any corrections if needed.') },300)
+				startBtn.textContent = 'Generate'
+				if(!Object.keys(fileScores).length) return
+				processFileScores()
 			})
 		})
 	}
 }
 
+function loadSongList(id, diff, dat) {
+	const sel = document.getElementById(`unrecognizedSong-${id}`)
+	const j = dat.ChartStats.Judge
+
+	sel.oninput=()=>{
+		fileScores[`${dat.file.name}/${dat.file.size}`] = {
+			cont: {'headers':{'content-type':'application/x-www-form-urlencoded'},'body':`submit=1&localsongcode=${dat.localSongCode}&notechartid=${sel.value}&difficulty=${dat.Mode}${dat.Difficulty}&gameid=${gameID.value}&marvelous=${j.Marvelous}&perfect=${j.Perfect}&great=${j.Great}&good=${j.Good}&almost=0&boo=${j.Miss}&ok=${j.OK}&speed=1.5x&boost=Off&appearance=Normal&turn=Normal&dark=Off&scroll=Normal&arrow=Note&other=&pictureid=12345&comment=Semi-automatically+uploaded+with+EATZ+(https%3A%2F%2Fgithub.com%2Faznguymp4%2Featz)&videolink=&pass=on&fullcombo=${j.Miss?'off':'on'}`,'method':'POST'},
+			song: {
+				diff: dat.Difficulty,
+				mode: dat.Mode
+			}
+		}
+		processFileScores()
+	}
+
+	sel.innerHTML = [
+		`<option disabled selected>─── Select Song ───</option>`,
+		getSongOptionList(diff),
+	].join('')
+	sel.disabled = false
+}
+
+function getSongOptionList(diff, filter) {
+	const list = charts[gameID.value][diff]
+	let lastLetter
+
+	return Object.keys(list).map(key => {
+		const c = list[key]
+		if(filter && filter.includes(c.NoteChartID+'')) return '';
+		let curLetter = /^[a-zA-Z]/.test(key[0])? key[0].toUpperCase() : 'NUM / SYMBOL'
+		const idk = lastLetter==curLetter
+		lastLetter = curLetter
+		return `${idk?'':`</optgroup><optgroup label="🔹MUSIC SORT ${curLetter.toUpperCase()}">`}<option value="${c.NoteChartID}">${c.OriginalTitle}</option>`
+	}).join('')
+}
+
+function processFileScores() {
+	codeblock.appendChild(filecodeblock)
+	filecodeblock.innerHTML = escapeHtml(fileUploadJS).replace('SCOREPLACEHOLDER',escapeHtml(JSON.stringify(fileScores)).replace(/localsongcode=/g, 'notechartid=<span id="NoteChartID-').replace(/(?<=NoteChartID-\d{1,})&amp;notechartid=/g,'">').replace(/(?<=NoteChartID-\d{1,}">\d{1,})&amp;/g,'</span>&amp;'))
+}
+
 function searchChartID(dat) { // tries its best to find the chart ID with the info provided by the OCR
 	return new Promise((res,err)=>{
-		let list = charts[gameID.value][`${dat.Mode}${dat.Difficulty}`]
-		let asdf = /(s|d)/.test(dat.Mode) && /(beg|bas|dif|exp|cha)/.test(dat.Difficulty)
-		if(asdf) { // song name missing (most common), find song using Steps and Freeze count
-			for (const songName in list) { // strict Steps + Freeze search
-				const chart = list[songName]
-				if(chart.ChartStats.Steps !== dat.ChartStats.Steps) continue
-				if(chart.ChartStats.Freeze !== dat.ChartStats.Freeze) continue
-				return res(chart)
-			}
+		console.log(dat)
+		const valid = /(s|d)/.test(dat.Mode) && /(beg|bas|dif|exp|cha)/.test(dat.Difficulty)
+		if(!valid) return err(dat)
+		const list = charts[gameID.value][`${dat.Mode}${dat.Difficulty}`]
+		let matchesForChart = {} // to see which chart matches the most criterias
+		let possible = {}
+		function markChartPossible(chart,pts = 1){
+			if(!chart) return;
+			if(!matchesForChart[chart.NoteChartID]) matchesForChart[chart.NoteChartID] = 0
+			matchesForChart[chart.NoteChartID] += pts * ((stringSimilar(chart.OriginalTitle,dat.SongName)*1.8) + (stringSimilar(chart.RomanizedTitle,dat.SongName)*.6))
+			possible[chart.NoteChartID] = chart
 		}
-		// find with song name (not very reliable cause ocr dumb)
-		for (const songName in list) { // strict Steps + Freeze search
+		
+		// exact name match; gets 3 priority points
+		if(list[dat.SongName]) markChartPossible(list[dat.songName],3)
+
+		for (const songName in list) {
 			const chart = list[songName]
-			if([dat.SongName,dat.SongName.replace(/ /g,'')].includes(chart.OriginalTitle)) return res(chart)
-			if([dat.SongName.toLowerCase()].includes(songName.toLowerCase())) return res(chart)
+			const J = dat.ChartStats.Judge
+
+			// strict search through OriginalTitles
+			const similarity = stringSimilar(chart.OriginalTitle, dat.SongName)
+			if(similarity > .5) markChartPossible(chart,2.1*similarity)
+			if(chart.OriginalTitle == dat.songName) markChartPossible(chart,3) // strict OriginalTitle search
+
+			// find with song name (not very reliable cause ocr dumb)
+			if([dat.SongName,dat.SongName.replace(/ /g,'')].includes(chart.OriginalTitle)) markChartPossible(chart)
+			if([dat.SongName.toLowerCase()].includes(songName.toLowerCase())) markChartPossible(chart)
+
+			// song name missing (most common), find song using Steps and Freeze count
+			// strict Steps + Freeze search
+			if((chart.ChartStats.Steps == dat.ChartStats.Steps)
+			&& (chart.ChartStats.Freeze == dat.ChartStats.Freeze))
+			markChartPossible(chart)
+
+			// lenient Steps + Freeze search
+			// lenient Steps (if Steps is higher than it's supposed to be, such as missing a Freeze/Shock which adds Miss instead of N.G., take the excess and add that to Freeze and see if Data matches the Chart)
+			if((dat.ChartStats.Steps > chart.ChartStats.Steps)
+			&& ((dat.ChartStats.Steps-chart.ChartStats.Steps)+J.OK == chart.ChartStats.Freeze)
+			&& ((dat.ChartStats.Steps-(chart.ChartStats.Freeze-J.OK)) == chart.ChartStats.Steps))
+			markChartPossible(chart)
+			
+			// strict Steps, lenient Freeze search (OK + Misses <= Freezes?)
+			if((chart.ChartStats.Steps == dat.ChartStats.Steps
+			&& chart.ChartStats.Freeze !== dat.ChartStats.Freeze)
+			&& (chart.ChartStats.Freeze - dat.ChartStats.Freeze < J.Miss)
+			&& (chart.ChartStats.Freeze.inRange(J.OK,J.Miss+J.OK)))
+			markChartPossible(chart)
 		}
-		if(list[dat.SongName]) return res(list[dat.SongName])
-		if(asdf) {
-			for (const songName in list) { // strict Steps, lenient Freeze search (OK + Misses <= Freezes?) 
-				const chart = list[songName]
-				if(chart.ChartStats.Steps !== dat.ChartStats.Steps) continue
-				if(chart.ChartStats.Freeze !== dat.ChartStats.Freeze) {
-					//if(!((dat.ChartStats.Freeze+dat.ChartStats.Judge.Miss) >= chart.ChartStats.Freeze)) continue
-					if((chart.ChartStats.Freeze - dat.ChartStats.Freeze < dat.ChartStats.Judge.Miss) && (chart.ChartStats.Freeze.inRange(dat.ChartStats.Judge.OK,dat.ChartStats.Judge.Miss+dat.ChartStats.Judge.OK))) return res(chart)
-				}
-			}
-		}
+
+		if(Object.keys(possible).length) return res([possible, matchesForChart])
 		console.log('Unrecognized song: ', dat)
 		return err(dat)
 	})
@@ -339,6 +425,34 @@ function getTweetImgs(tweetURL) {
 	})
 }
 
+function stringSimilar(s1, s2) { // float from 0 to 1 indicating how similar two strings are
+	let [longer,shorter] = [s1.toLowerCase(),s2.toLowerCase()]
+	if (s1.length < s2.length) {
+		longer = s2
+		shorter = s1
+	}
+	let longerLength = longer.length;
+	if (longerLength == 0) return 1
+
+	let costs = new Array()
+	for (let i=0;i<=s1.length;i++) {
+		let lastVal = i
+		for (let j=0;j<=s2.length;j++) {
+			if(!i) costs[j] = j
+			else {
+				if(j) {
+					let newVal = costs[j - 1]
+					if(s1.charAt(i-1)!=s2.charAt(j-1)) newVal = Math.min(Math.min(newVal, lastVal), costs[j])+1
+					costs[j - 1] = lastVal
+					lastVal = newVal
+				}
+			}
+		}
+		if (i) costs[s2.length] = lastVal
+	}
+	return (longerLength - costs[s2.length]) / parseFloat(longerLength)
+}
+
 function escapeHtml(unsafe) {
 	// i hate this pls tell me there's a better way :(
 	return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#039;");
@@ -348,9 +462,39 @@ Number.prototype.inRange = function(least, most) {
 }
 /**
  * 
- * Run this code on the ZiV score tracker page to get the latest ChartID JSONs
+ * Run this code on the ZiV score tracker page to open each tracker page
  * 
 
+const gameIDs = {
+	'5518': 'A3',
+	'5156': 'A20PLUS',
+	'3802': 'A20',
+	'2979': 'A',
+	'1129': '2013_2014'
+}
+const modes = ['sbeg','sbas','sdif','sexp','scha','dbas','ddif','dexp','dcha']
+
+Object.keys(gameIDs).map(gID => {
+    modes.map(mode => {
+        let newDoc = window.open(`https://zenius-i-vanisher.com/v5.2/ddrscoretracker_game.php?gameid=${gID}&difficulty=${mode}&sort=default&action=printGameView&list_view=1`).document
+    })
+})
+
+
+ *
+ * Run this code on each tab after running the code above to download a .json for each mode
+ *
+
+
+function download(filename, text) {
+	let element = document.createElement('a')
+	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+	element.setAttribute('download', filename)
+	element.style.display = 'none'
+	document.body.appendChild(element)
+	element.click();
+	document.body.removeChild(element)
+}
 let rows = document.getElementsByClassName('score')
 let json = {}
 for(let i=0;i<rows.length;i++){
@@ -362,12 +506,13 @@ for(let i=0;i<rows.length;i++){
     json[row.getAttribute('title')] = {
         NoteChartID: id,
         OriginalTitle: a.textContent,
+		RomanizedTitle: row.getAttribute('title'),
         ChartStats: {
             Steps: parseInt(stats[0]),
             Freeze: parseInt(stats[1])
         }
     }
 }
-console.log(JSON.stringify(json))
+download(`${new URLSearchParams(window.location.search).get('difficulty')}.json`,JSON.stringify(json))
 
 */

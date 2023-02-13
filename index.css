@@ -4,12 +4,13 @@
 	--textInputAccent: #4e9eff;
 /* 	--textInputGrad: linear-gradient(90deg, rgba(78,158,255,0) 0%, rgba(78,158,255,1) 20%, rgba(78,158,255,1) 80%, rgba(78,158,255,0) 100%);*/
 	--textColor: #ddd;
+	--transitionTime: 100ms;
 	--cornerRadius: 8px;
-	--defaultFont: GilroyBold, Arial, Helvetica, sans-serif;
-	--lightFont: Gilroy, Arial, Helvetica, sans-serif;
+	--defaultFont: PlusJakartaSansBold, Arial, Helvetica, sans-serif;
+	--lightFont: PlusJakartaSans, Arial, Helvetica, sans-serif;
 	--codeBlockFont: Consolas, Menlo, 'Courier New', monospace;
 	--diffBeg: #78ACff;
-	--diffBas: #FFE562;
+	--diffBas: #FF9E1E;
 	--diffDif: #ED4245;
 	--diffExp: #2ECC71;
 	--diffCha: #E66AFF;
@@ -18,19 +19,19 @@
 }
 
 @font-face {
-	font-family: Gilroy;
-	src: url("./fonts/Gilroy-Light.ttf");
+	font-family: PlusJakartaSans;
+	src: url("./fonts/PlusJakartaSans-Regular.ttf");
 }
 
 @font-face {
-	font-family: GilroyBold;
-	src: url("./fonts/Gilroy-Bold.ttf");
+	font-family: PlusJakartaSansBold;
+	src: url("./fonts/PlusJakartaSans-ExtraBold.ttf");
 }
 
 a{
 	color: var(--buttonSecondary);
 	text-decoration: none;
-	transition: ease-out color 150ms;
+	transition: ease-out color var(--transitionTime);
 }
 a:hover{
 	color: var(--buttonPrimary);
@@ -60,12 +61,16 @@ body {
 	font-size: 13.6px;
 	background-color: #333;
 	color: #888;
-	cursor: pointer;
 	border-radius: var(--cornerRadius);
 	padding: 10px;
     white-space: nowrap;
 }
 
+.beg>select { background-color: var(--diffBeg); }
+.bas>select { background-color: var(--diffBas); }
+.dif>select { background-color: var(--diffDif); }
+.exp>select { background-color: var(--diffExp); }
+.cha>select { background-color: var(--diffCha); }
 .beg,.good      { color: var(--diffBeg); }
 .bas,.perfect   { color: var(--diffBas); }
 .dif,.miss      { color: var(--diffDif); }
@@ -76,7 +81,7 @@ body {
 .NaN a{ color: var(--diffBeg) !important; }
 .command {
 	padding-top: 5px;
-	height: 56px;
+	height: 57px;
 }
 .viewUnrecognizedFile {
 	background: none;
@@ -98,7 +103,7 @@ body {
 	position: fixed;
 	left: 0px;
 	top: 0px;
-	transition: width ease-out 150ms;
+	transition: width ease-out var(--transitionTime);
 	z-index: 100;
 }
 
@@ -111,17 +116,27 @@ body {
 	color: #fff;
 	cursor: pointer;
 	font-family: var(--defaultFont);
-	font-size: 18px;
-	font-weight: 400;
+	font-size: 1em;
+	font-weight: 100;
 	min-width: 115px;
 	outline: none;
+	display: inline-block;
 	padding: 10px 15px;
 	text-align: center;
+	vertical-align: middle;
+	height: 44px;
+	line-height: 0px;
 	transform: translateY(0);
-	transition: transform ease-out 150ms, box-shadow 150ms, opacity 150ms;
+	transition: transform ease-out var(--transitionTime), box-shadow var(--transitionTime), opacity var(--transitionTime);
 	user-select: none;
 	-webkit-user-select: none;
 	touch-action: manipulation;
+}
+
+select {
+	border-radius: var(--cornerRadius);
+	font-family: var(--defaultFont);
+	max-width: 320px;
 }
 
 .greenBtn:hover {

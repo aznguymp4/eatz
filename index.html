@@ -34,7 +34,7 @@
 					<canvas class="fileInputThumb"></canvas>
 				</div>
 			</div>
-			<label class="greenBtn" id="fileAdd" for="fileUpl">Upload Image File(s)</label><br><br>
+			<label class="greenBtn" id="fileAdd" for="fileUpl" style="line-height:21px;">Upload Image File(s)</label><br><br>
 			<button class="greenBtn" id="urlAdd" onclick="urlAdd()">Attach Image URL</button>
 			<input type="checkbox" name="autoPaste" id="autoPaste">Auto paste on new</input>
 			<br><br>
@@ -49,10 +49,14 @@
 			</select>
 		</div>
 		<div id="right">
-			<h3 align="right">Console Command (paste in <a target="_blank" href="https://zenius-i-vanisher.com/">zenius</a>)</h3><br>
-			<div id="codeBlock" onclick="selectText('codeBlock')">
+			<div style="display:flex;height: 82px;">
+				<button class="greenBtn" onclick="selectText('codeBlock')" style="height: 44px; vertical-align: middle; margin-top: auto; margin-bottom: auto;">Select All</button>
+				<h3 align="right" style="margin-left: auto;">Console Command (paste in <a target="_blank" href="https://zenius-i-vanisher.com/">zenius</a>)</h3>
+			</div>
+			<div id="codeBlock">
 				console.log("example");<br>
 				// example<br>
+				<div id="fileScores"></div>
 			</div>
 		</div>
 	</div>

@@ -19,7 +19,7 @@ input.addEventListener('change',()=>{
 	} else submit.style.display = 'none';
 });
 const abrv = {'beg':'Beginner','bas':'Basic','dif':'Difficult','exp':'Expert','cha':'Challenge','s':'Single','d':'Doubles'};
-const scores={'place':'holder'};
+const scores=SCOREPLACEHOLDER;
 submit.addEventListener('click',()=>{
 	Array.from(input.files).map(file => {
 		let score = scores[`${file.name}/${file.size}`];
