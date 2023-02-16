@@ -32,7 +32,7 @@ When playing DDR, pressing 1️⃣ at the results screen will send the image to 
 ![PlayShare guide](./src/guide.png)
 
 ## Using EATZ and Uploading to ZiV
-1. On EATZ, Upload PlayShare screenshot files or paste image/tweet URLs that contain PlayShare screenshots.
+1. On EATZ, upload PlayShare screenshot files or paste image/tweet URLs that contain PlayShare screenshots.
 2. Click **Generate** to scan the screenshots and generate the console command(s).
 3. Once generated, double check the code and make any corrections if there are misdetected songs.
 4. Click **Select All** at the top, and copy all the text in the code block.
