@@ -81,7 +81,7 @@ body {
 .NaN a{ color: var(--diffBeg) !important; }
 .command {
 	padding-top: 5px;
-	height: 57px;
+	height: 56px;
 }
 .viewUnrecognizedFile {
 	background: none;
@@ -153,6 +153,7 @@ select {
 .imgInput {
 	position: relative;
 	margin-bottom: 25px;
+	height: 36px;
 }
 
 /* input[type=file] {
