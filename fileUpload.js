@@ -22,7 +22,7 @@ const abrv = {'beg':'Beginner','bas':'Basic','dif':'Difficult','exp':'Expert','c
 const scores=SCOREPLACEHOLDER;
 submit.addEventListener('click',()=>{
 	Array.from(input.files).map(file => {
-		let score = scores[`${file.name}/${file.size}`];
+		let score = scores[`${encodeURIComponent(file.name)}/${file.size}`];
 		if(score) {
 			function wait() {
 				if(uploading) setTimeout(wait,500); /* ZiV doesn't like it when you start multiple image uploads at once... */
@@ -32,11 +32,11 @@ submit.addEventListener('click',()=>{
 				console.log(`Starting: ${file.name}`);
 				fetch('https://zenius-i-vanisher.com/v5.2/uploadpicture.php', {
 					headers: {
-						'Content-Type': file.type,
+						'Content-Type': `${file.type}; charset=ISO-8859-1`,
 						'x-category-id': '39',
 						'x-description': `${abrv[score.song.diff]} - ${abrv[score.song.mode]} Play - Semi-automatically uploaded with EATZ (https://github.com/aznguymp4/eatz)`,
 						'x-file-size': file.size,
-						'x-name': file.name
+						'x-name': file.name.replace(/[^\u0000-\u007f]/g,'').replace(/"/g,'')
 					},
 					body: file,
 					method: 'POST'

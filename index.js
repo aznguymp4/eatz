@@ -265,7 +265,7 @@ function processOCR(inputElement,imgURL,srcImg) {
 						renderSongIcon(newCvs, srcImg)
 					}
 				} else { // Image File
-					fileScores[`${file.name}/${file.size}`] = {
+					fileScores[`${encodeURIComponent(file.name)}/${file.size}`] = {
 						cont: {'headers':{'content-type':'application/x-www-form-urlencoded'},'body':`submit=1&localsongcode=${localSongCode}&notechartid=${chart.NoteChartID}&difficulty=${dat.Mode}${dat.Difficulty}&gameid=${gameID.value}&marvelous=${j.Marvelous}&perfect=${j.Perfect}&great=${j.Great}&good=${j.Good}&almost=0&boo=${j.Miss}&ok=${j.OK}&speed=1.5x&boost=Off&appearance=Normal&turn=Normal&dark=Off&scroll=Normal&arrow=Note&other=&pictureid=12345&comment=Semi-automatically+uploaded+with+EATZ+(https%3A%2F%2Fgithub.com%2Faznguymp4%2Featz)&videolink=&pass=on&fullcombo=${j.Miss?'off':'on'}`,'method':'POST'},
 						song: {
 							diff: dat.Difficulty,
