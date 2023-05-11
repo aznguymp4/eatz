@@ -162,10 +162,12 @@ function zeniusify(inputElement,imgURL) {
 			ctx.filter = 'contrast(300%) grayscale(100%)'
 			ctx.drawImage(modeCvs,208,490)
 			ctx.drawImage(diffCvs,208,535)
+			processOCR(inputElement,cvs.toDataURL(),imgURL)
 		} else {  // screenshot is in DDR A format
 			cvs.width = 930; cvs.height = 620
 			ctx.filter = 'invert(1) contrast(200%)'
 			ctx.drawImage(img,0,0,cvs.width,cvs.height)
+			const FAC = new FastAverageColor()
 
 			let titleCvs = document.createElement('canvas')
 			let titleCtx = titleCvs.getContext('2d')
@@ -176,8 +178,21 @@ function zeniusify(inputElement,imgURL) {
 			ctx.drawImage(titleCvs,0,0)
 			ctx.filter = 'invert(0)'
 			ctx.drawImage(cover,0,0,cvs.width,cvs.height)
+
+			let grvRdrCvs = document.createElement('canvas')
+			let grvRdrCtx = grvRdrCvs.getContext('2d')
+			grvRdrCvs.width = cvs.width*(9/310); grvRdrCvs.height = cvs.height*(29/620)
+			grvRdrCtx.drawImage(img,-(364/465)*cvs.width,-(269/620)*cvs.height)
+
+			FAC.getColorAsync(grvRdrCvs).then(color => {
+				let hue = rgb2hsv(color.value).h // average groove radar hue: Single = 186, Doubles = 300. (243 is the mid range between the two)
+				processOCR(inputElement,cvs.toDataURL(),imgURL,hue>243)
+			}).catch(e=>{
+				console.log(e)
+				processOCR(inputElement,cvs.toDataURL(),imgURL)
+			})
+			FAC.destroy()
 		}
-		processOCR(inputElement,cvs.toDataURL(),imgURL)
 	}
 	img.onerror=()=>{
 		running--
@@ -187,7 +202,7 @@ function zeniusify(inputElement,imgURL) {
 	img.src = imgURL
 }
 
-function processOCR(inputElement,imgURL,srcImg) {
+function processOCR(inputElement,imgURL,srcImg,isDouble) {
 	// window.open().document.write(`<img src="${imgURL}"></img>`)
 	const file = inputElement.FILE_ATTR
 	let percent = inputElement.parentElement.getElementsByClassName('progress')[0]
@@ -213,7 +228,7 @@ function processOCR(inputElement,imgURL,srcImg) {
 			OCRqueue--;
 			let dat = {
 				SongName: text.match(/(?<=song( |\n){0,}).{1,}/i)[0].trim(),
-				Mode: /(?<=mode {0,})(D|d)/i.test(text)? 'd':'s', // if mode starts with D, it's doubles, else single/versus
+				Mode: (isDouble || /(?<=mode {0,})(D|d)/i.test(text))? 'd':'s', // if mode starts with D, it's doubles, else single/versus
 				Difficulty: text.match(/(?<=difficulty) {0,}.{1,3}/i)[0].trim().toLowerCase(),
 				URLEntered: inputElement.value,
 				ImgSrc: srcImg,
@@ -451,6 +466,44 @@ function stringSimilar(s1, s2) { // float from 0 to 1 indicating how similar two
 		if (i) costs[s2.length] = lastVal
 	}
 	return (longerLength - costs[s2.length]) / parseFloat(longerLength)
+}
+
+function rgb2hsv(rgb) { // https://stackoverflow.com/a/8023734
+    let rabs, gabs, babs, rr, gg, bb, h, s, v, diff, diffc, percentRoundFn;
+	let [r,g,b] = rgb
+    rabs = r / 255;
+    gabs = g / 255;
+    babs = b / 255;
+    v = Math.max(rabs, gabs, babs),
+    diff = v - Math.min(rabs, gabs, babs);
+    diffc = c => (v - c) / 6 / diff + 1 / 2;
+    percentRoundFn = num => Math.round(num * 100) / 100;
+    if (diff == 0) {
+        h = s = 0;
+    } else {
+        s = diff / v;
+        rr = diffc(rabs);
+        gg = diffc(gabs);
+        bb = diffc(babs);
+
+        if (rabs === v) {
+            h = bb - gg;
+        } else if (gabs === v) {
+            h = (1 / 3) + rr - bb;
+        } else if (babs === v) {
+            h = (2 / 3) + gg - rr;
+        }
+        if (h < 0) {
+            h += 1;
+        }else if (h > 1) {
+            h -= 1;
+        }
+    }
+    return {
+        h: Math.round(h * 360),
+        s: percentRoundFn(s * 100),
+        v: percentRoundFn(v * 100)
+    };
 }
 
 function escapeHtml(unsafe) {
