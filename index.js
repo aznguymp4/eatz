@@ -21,6 +21,13 @@ let progressSum = []
 let fileScores = {}
 let charts = {}
 const abrv = {'sbeg':'🔵 bSP • Single Beginner','sbas':'🟠 BSP • Single Basic','sdif':'🔴 DSP • Single Difficult','sexp':'🟢 ESP • Single Expert','scha':'🟣 CSP • Single Challenge','dbas':'🟠 BDP • Double Basic','ddif':'🔴 DDP • Double Difficult','dexp':'🟢 EDP • Double Expert','dcha':'🟣 CDP • Double Challenge'}
+const diffHues = {
+    beg: 194, // 192,196
+    bas: 36.5, // 39,34
+    dif: 349.5, // 351,348
+    exp: 116, // 117,115
+    cha: 292.5 // 291,294
+}
 const gameIDs = {
 	'5518': 'A3',
 	'5156': 'A20PLUS',
@@ -134,7 +141,7 @@ function start() {
 function zeniusify(inputElement,imgURL) {
 	let img = new Image()
 	img.crossOrigin='anonymous'
-	img.onload=()=>{
+	img.onload=async()=>{
 		renderSongIcon(inputElement.parentElement.getElementsByTagName('canvas')[0], imgURL)
 
 		let cvs = document.createElement('canvas')
@@ -184,13 +191,27 @@ function zeniusify(inputElement,imgURL) {
 			grvRdrCvs.width = img.width*(9/310); grvRdrCvs.height = img.height*(29/620)
 			grvRdrCtx.drawImage(img,-(364/465)*img.width,-(269/620)*img.height)
 
-			FAC.getColorAsync(grvRdrCvs).then(color => {
-				let hue = rgb2hsv(color.value).h // average groove radar hue: Single = 186, Doubles = 300. (243 is the mid range between the two)
-				processOCR(inputElement,cvs.toDataURL(),imgURL,hue>243)
-			}).catch(e=>{
-				console.log(e)
-				processOCR(inputElement,cvs.toDataURL(),imgURL)
-			})
+			let diffCvs = document.createElement('canvas')
+			let diffCtx = diffCvs.getContext('2d')
+			diffCvs.width = img.width*(1/20); diffCvs.height = img.height*(1/40)
+			diffCtx.drawImage(img,-(169/600)*img.width,-(117/400)*img.height)
+			window.open().document.write(`<img src="${diffCvs.toDataURL()}"></img>`)
+
+			let grvRdrCol = await FAC.getColorAsync(grvRdrCvs)
+			let diffCol = await FAC.getColorAsync(diffCvs)
+			grvRdrCol = rgb2hsv(grvRdrCol.value).h || 185 // average groove radar hue: Single = 186, Doubles = 300. (243 is the mid range between the two)
+			diffCol = rgb2hsv(diffCol.value).h || 116
+
+			console.log(inputElement, diffCol)
+
+			processOCR(
+				inputElement,
+				cvs.toDataURL(),
+				imgURL,
+				grvRdrCol>243,
+				Object.keys(diffHues)[Object.values(diffHues).map((h,idx)=>[Math.abs(h-diffCol),idx]).sort((a,b)=>a[0]-b[0])[0][1]]
+					// find difficulty by smallest hue difference from diffHues
+			)
 			FAC.destroy()
 		}
 	}
@@ -202,7 +223,8 @@ function zeniusify(inputElement,imgURL) {
 	img.src = imgURL
 }
 
-function processOCR(inputElement,imgURL,srcImg,isDouble) {
+function processOCR(inputElement,imgURL,srcImg,isDouble,Difficulty) {
+	// window.open().document.write(`<img src="${imgURL}"></img>`)
 	const file = inputElement.FILE_ATTR
 	let percent = inputElement.parentElement.getElementsByClassName('progress')[0]
 	fileScores = {}
@@ -228,7 +250,7 @@ function processOCR(inputElement,imgURL,srcImg,isDouble) {
 			let dat = {
 				SongName: text.match(/(?<=song( |\n){0,}).{1,}/i)[0].trim(),
 				Mode: (isDouble || /(?<=mode {0,})(D|d)/i.test(text))? 'd':'s', // if mode starts with D, it's doubles, else single/versus
-				Difficulty: text.match(/(?<=difficulty) {0,}.{1,3}/i)[0].trim().toLowerCase(),
+				Difficulty,//: text.match(/(?<=difficulty) {0,}.{1,3}/i)[0].trim().toLowerCase(),
 				URLEntered: inputElement.value,
 				ImgSrc: srcImg,
 				ChartStats: {
