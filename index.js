@@ -164,7 +164,7 @@ function zeniusify(inputElement,imgURL) {
 			ctx.drawImage(diffCvs,208,535)
 			processOCR(inputElement,cvs.toDataURL(),imgURL)
 		} else {  // screenshot is in DDR A format
-			cvs.width = 930; cvs.height = 620
+			cvs.width = 930; cvs.height = 620;
 			ctx.filter = 'invert(1) contrast(200%)'
 			ctx.drawImage(img,0,0,cvs.width,cvs.height)
 			const FAC = new FastAverageColor()
@@ -181,8 +181,8 @@ function zeniusify(inputElement,imgURL) {
 
 			let grvRdrCvs = document.createElement('canvas')
 			let grvRdrCtx = grvRdrCvs.getContext('2d')
-			grvRdrCvs.width = cvs.width*(9/310); grvRdrCvs.height = cvs.height*(29/620)
-			grvRdrCtx.drawImage(img,-(364/465)*cvs.width,-(269/620)*cvs.height)
+			grvRdrCvs.width = img.width*(9/310); grvRdrCvs.height = img.height*(29/620)
+			grvRdrCtx.drawImage(img,-(364/465)*img.width,-(269/620)*img.height)
 
 			FAC.getColorAsync(grvRdrCvs).then(color => {
 				let hue = rgb2hsv(color.value).h // average groove radar hue: Single = 186, Doubles = 300. (243 is the mid range between the two)
@@ -203,7 +203,6 @@ function zeniusify(inputElement,imgURL) {
 }
 
 function processOCR(inputElement,imgURL,srcImg,isDouble) {
-	// window.open().document.write(`<img src="${imgURL}"></img>`)
 	const file = inputElement.FILE_ATTR
 	let percent = inputElement.parentElement.getElementsByClassName('progress')[0]
 	fileScores = {}
