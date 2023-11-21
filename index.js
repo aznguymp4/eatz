@@ -195,7 +195,6 @@ function zeniusify(inputElement,imgURL) {
 			let diffCtx = diffCvs.getContext('2d')
 			diffCvs.width = img.width*(1/20); diffCvs.height = img.height*(1/40)
 			diffCtx.drawImage(img,-(169/600)*img.width,-(117/400)*img.height)
-			window.open().document.write(`<img src="${diffCvs.toDataURL()}"></img>`)
 
 			let grvRdrCol = await FAC.getColorAsync(grvRdrCvs)
 			let diffCol = await FAC.getColorAsync(diffCvs)
