@@ -8,7 +8,7 @@ Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshot
 ## Notes
 - ❗️❗️❗️ Uploading scores to ZiV with EATZ does involve pasting console commands, but it is 100% safe! If you're still unsure, this project is open-source so you can look at the code.
 - EATZ uses [tesseract.js](https://github.com/naptha/tesseract.js) (compiled with [browserify](https://github.com/browserify/browserify)) to scan your screenshots for data, such as song names, judgement counts, etc.
-- EATZ currently doesn't scan for chart modifiers (speed mod, boost, turn, etc.), so x1.5 <img src="https://raw.githubusercontent.com/Curilang/DDR-A3-THEME/main/Themes/DDR%20A3/Graphics/OptionIcon/P1/daopic0000_1p_speed_x150.png" height="22px"> and Note <img src="https://media.discordapp.net/emojis/939036886901616690.gif" height="22px"> will be selected by default.
+- EATZ currently doesn't scan for chart modifiers (speed mod, boost, turn, etc.), so x1.5 <img src="https://cdn.discordapp.com/emojis/1152107109849239585.gif" height="22px"> and Note <img src="https://media.discordapp.net/emojis/939036886901616690.gif" height="22px"> will be selected by default.
 - Compatible with both [DDR-A-Type](https://imgur.com/a/krUPbNo) and [DDR-2014-Type](https://media.discordapp.net/attachments/860985407452479508/1044055060671385651/unknown.png) screenshot formats.
 - Does not support Courses.
 - Does not support failed scores. (<img src="https://media.discordapp.net/attachments/860985407452479508/1053205928733835284/Grade_Failed.png" height="22px">)
