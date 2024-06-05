@@ -11,7 +11,7 @@ Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshot
 - EATZ currently doesn't scan for chart modifiers (speed mod, boost, turn, etc.), so x1.5 <img src="https://cdn.discordapp.com/emojis/1152107109849239585.gif" height="22px"> and Note <img src="https://media.discordapp.net/emojis/939036886901616690.gif" height="22px"> will be selected by default.
 - Compatible with both [DDR-A-Type](https://imgur.com/a/krUPbNo) and [DDR-2014-Type](https://media.discordapp.net/attachments/860985407452479508/1044055060671385651/unknown.png) screenshot formats.
 - Does not support Courses.
-- Does not support failed scores. (<img src="https://media.discordapp.net/attachments/860985407452479508/1053205928733835284/Grade_Failed.png" height="22px">)
+- Does not support failed scores. (<img src="https://github.com/aznguymp4/eatz/assets/48527495/fdf4b052-7aa6-4991-af87-4615d869bd90" height="22px">)
 - There may be some songs that EATZ can't recognize when scanning screenshots. It doesn't happen very often but unfortunately, you'll have to enter those outliers manually.
 
 ## Usage
