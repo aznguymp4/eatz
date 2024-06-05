@@ -16,8 +16,8 @@ Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshot
 
 ## Usage
 1. [Setting up PlayShare](#setting-up-playshare)
-
 2. [Accessing the Screenshots](#accessing-the-screenshots)
+
 3. [Using EATZ and Uploading to ZiV](#using-eatz-and-uploading-to-ziv)
 
 ## Setting up PlayShare
