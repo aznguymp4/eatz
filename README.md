@@ -17,8 +17,8 @@ Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshot
 ## Usage
 1. [Setting up PlayShare](#setting-up-playshare)
 2. [Accessing the Screenshots](#accessing-the-screenshots)
-
 3. [Using EATZ and Uploading to ZiV](#using-eatz-and-uploading-to-ziv)
+
 
 ## Setting up PlayShare
 1. Download **[e-amusementアプリ](https://eam.573.jp/app/web/howto/?page=playshare.html&share_game=ddr)** on your [iOS](https://apps.apple.com/jp/app/id680436505) or [Android](https://play.google.com/store/apps/details?id=jp.konami.eam.link) device.
