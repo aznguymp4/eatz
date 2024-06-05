@@ -15,8 +15,8 @@ Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshot
 - There may be some songs that EATZ can't recognize when scanning screenshots. It doesn't happen very often but unfortunately, you'll have to enter those outliers manually.
 
 ## Usage
-
 1. [Setting up PlayShare](#setting-up-playshare)
+
 2. [Accessing the Screenshots](#accessing-the-screenshots)
 3. [Using EATZ and Uploading to ZiV](#using-eatz-and-uploading-to-ziv)
 
