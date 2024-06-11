@@ -2,7 +2,7 @@
 Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshots to [ZiV DDR Score Tracker](https://zenius-i-vanisher.com/v5.2/ddrscoretracker.php?function=enterscore).
 
 ![thumbnail](./src/thumb.png)
-### Latest Version (FULLY) Supported: DDR A20 PLUS
+### Latest Version (FULLY) Supported: DDR A3
 ##### DDR A3 is partially supported (some new songs won't be recognized.)
 
 ## Notes
