@@ -3,7 +3,7 @@ Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshot
 
 ![thumbnail](./src/thumb.png)
 ### Latest Version (FULLY) Supported: DDR A3
-##### DDR A3 is partially supported (some new songs won't be recognized.)
+##### DDR WORLD support is coming soon!
 
 ## Notes
 - ❗️❗️❗️ Uploading scores to ZiV with EATZ does involve pasting console commands, but it is 100% safe! If you're still unsure, this project is open-source so you can look at the code.
