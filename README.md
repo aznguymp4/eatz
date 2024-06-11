@@ -3,8 +3,8 @@ Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshot
 
 ![thumbnail](./src/thumb.png)
 ### Latest Version (FULLY) Supported: DDR A3
-##### DDR WORLD support is coming soon!
 
+##### DDR WORLD support is coming soon!
 ## Notes
 - ❗️❗️❗️ Uploading scores to ZiV with EATZ does involve pasting console commands, but it is 100% safe! If you're still unsure, this project is open-source so you can look at the code.
 - EATZ uses [tesseract.js](https://github.com/naptha/tesseract.js) (compiled with [browserify](https://github.com/browserify/browserify)) to scan your screenshots for data, such as song names, judgement counts, etc.
