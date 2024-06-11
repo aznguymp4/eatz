@@ -2,8 +2,8 @@
 Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshots to [ZiV DDR Score Tracker](https://zenius-i-vanisher.com/v5.2/ddrscoretracker.php?function=enterscore).
 
 ![thumbnail](./src/thumb.png)
-
 ### Latest Version (FULLY) Supported: DDR A3
+
 ##### DDR WORLD support is coming soon!
 ## Notes
 - ❗️❗️❗️ Uploading scores to ZiV with EATZ does involve pasting console commands, but it is 100% safe! If you're still unsure, this project is open-source so you can look at the code.
