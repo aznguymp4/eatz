@@ -1,7 +1,7 @@
 # [EATZ](https://aznguy.com/eatz/) (e-amusement to zenius)
 Efficiently upload **DDR e-amusement PlayShare** (プレーシェア) screenshots to [ZiV DDR Score Tracker](https://zenius-i-vanisher.com/v5.2/ddrscoretracker.php?function=enterscore).
-![thumbnail](./src/thumb.png)
 
+![thumbnail](./src/thumb.png)
 ### Latest Version (FULLY) Supported: DDR A3
 ##### DDR WORLD support is coming soon!
 
