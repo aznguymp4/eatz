@@ -557,7 +557,6 @@ Object.keys(gameIDs).map(gID => {
  * Run this code on each tab after running the code above to download a .json for each mode
  *
 
-
 function download(filename, text) {
 	let element = document.createElement('a')
 	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
