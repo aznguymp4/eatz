@@ -553,7 +553,6 @@ Object.keys(gameIDs).map(gID => {
     })
 })
 
-
  *
  * Run this code on each tab after running the code above to download a .json for each mode
  *
